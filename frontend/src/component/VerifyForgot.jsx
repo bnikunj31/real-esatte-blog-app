@@ -43,7 +43,7 @@ const VerifyForgot = () => {
       if (response.status === 200) {
         toast.success(response.data.msg);
         sessionStorage.clear();
-        setTimeout(() => navigate("/Signin"), 2000);
+        setTimeout(() => navigate("/login"), 2000);
       } else {
         toast.error(response.data.msg);
       }
