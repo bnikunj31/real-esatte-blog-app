@@ -32,7 +32,7 @@ const OTPPage = () => {
       console.log(response.data);
       if (response.status === 200) {
         toast.success("OTP Verified Successfully!");
-        navigate("/Signin");
+        navigate("/login");
       } else {
         toast.error("Invalid OTP, please try again.");
       }

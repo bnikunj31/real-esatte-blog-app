@@ -49,7 +49,7 @@ const App = () => {
   const excludePopupPaths = [
     "/register",
     "/Otp_verify",
-    "/Signin",
+    "/login",
     "/forgot-password",
     "/forgotVerify",
     "/contact",
