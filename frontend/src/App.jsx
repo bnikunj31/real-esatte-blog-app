@@ -46,7 +46,6 @@ const App = () => {
     }
   }, []);
 
-  // List of paths where PopupForm should not be shown
   const excludePopupPaths = [
     "/register",
     "/Otp_verify",
@@ -55,7 +54,7 @@ const App = () => {
     "/forgotVerify",
     "/contact",
     "/PrivacyPolicy",
-    "/admin", // Exclude admin routes from showing the popup
+    "/admin",
     "/AddCategory",
     "/PropertyForm",
     "/users",
@@ -70,10 +69,8 @@ const App = () => {
   const shouldShowPopup =
     !excludePopupPaths.includes(location.pathname) && role !== "admin";
 
-  // Disable right-click
   document.addEventListener("contextmenu", (event) => event.preventDefault());
 
-  // Disable F12, Ctrl+Shift+I, Ctrl+Shift+J, and Ctrl+U
   document.onkeydown = (event) => {
     if (
       event.key === "F12" ||
@@ -89,14 +86,13 @@ const App = () => {
   const detectDevToolsByConsole = () => {
     const startTime = new Date();
 
-    debugger; // This triggers a pause if DevTools is open
+    debugger;
     const endTime = new Date();
 
-    // If DevTools is open, the `debugger` statement causes a noticeable delay
     if (endTime - startTime > 100) {
       alert("DevTools are open. Please close them to continue.");
       sessionStorage.clear();
-      window.location.href = "/Signin";
+      window.location.href = "/login";
     }
   };
 
