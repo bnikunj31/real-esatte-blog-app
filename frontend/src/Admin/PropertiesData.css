@@ -1,0 +1,6 @@
+.image-carousel img {
+  transition: opacity 1s ease-in-out;
+  position: absolute;
+  width: 100%;
+  height: auto;
+}

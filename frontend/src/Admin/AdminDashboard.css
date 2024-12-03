@@ -1,0 +1,25 @@
+.admin-card {
+  transition: transform 0.2s ease-in-out;
+  cursor: pointer;
+}
+
+.admin-card:hover {
+  transform: scale(1.05);
+}
+
+.table-container {
+  overflow-x: auto;
+}
+
+.table {
+  text-align: center;
+}
+
+.navbar-nav .nav-item .nav-link {
+  color: white !important;
+}
+
+.navbar-nav .nav-item .nav-link:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 5px;
+}

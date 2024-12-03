@@ -1,0 +1,59 @@
+/* Ensure the carousel item fades smoothly */
+.carousel-item {
+  transition: transform 1s ease-in-out, opacity 1s ease-in-out;
+}
+
+/* This ensures images inside the carousel are also responsive */
+.carousel-inner {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
+
+/* Make sure the items inside the carousel slide */
+.carousel-item-next,
+.carousel-item-prev,
+.carousel-item.active {
+  transition: none !important; /* Disable transition for active item */
+}
+
+/* Fade animation */
+.carousel-fade .carousel-item {
+  opacity: 0;
+  transition: opacity 1s ease-in-out;
+}
+
+.carousel-fade .carousel-item-next,
+.carousel-fade .carousel-item-prev,
+.carousel-fade .carousel-item.active {
+  opacity: 1;
+  transition: opacity 1s ease-in-out;
+}
+
+/* Sliding effect */
+.carousel-inner {
+  display: flex;
+  transition: transform 1s ease-in-out; /* Smooth sliding transition */
+}
+
+.carousel-item {
+  flex: 0 0 100%;  /* Ensure each item takes full width of carousel */
+}
+
+/* Optionally, you can set the transform for sliding the items */
+.carousel-item-next,
+.carousel-item-prev {
+  transform: translateX(100%);
+}
+
+.carousel-item-next.carousel-item-left,
+.carousel-item-prev.carousel-item-right {
+  transform: translateX(0);
+}
+
+.carousel-item-next.carousel-item-right,
+.carousel-item-prev.carousel-item-left {
+  transform: translateX(-100%);
+}
+
+
