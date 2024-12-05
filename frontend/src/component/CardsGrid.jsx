@@ -69,9 +69,6 @@ const Cards = ({ card }) => {
           <p className="card-text">
             <strong>Type:</strong> {card.type}
           </p>
-          <p className="card-text">
-            <strong>Price:</strong> ₹{card.price}
-          </p>
           <div className="d-flex justify-content-between">
             <p className="card-text">
               <strong>Area:</strong> {card.area}

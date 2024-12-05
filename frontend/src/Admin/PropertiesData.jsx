@@ -345,7 +345,7 @@ const PropertiesData = () => {
                           ml: { xs: 0, sm: 1 },
                           width: "fit-content",
                         }}
-                        onClick={() => handleDeleteDialogOpen(row.id)}
+                        onClick={() => handleDeleteDialogOpen(row._id)}
                       >
                         Delete
                       </Button>

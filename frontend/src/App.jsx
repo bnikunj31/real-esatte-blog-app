@@ -69,34 +69,34 @@ const App = () => {
   const shouldShowPopup =
     !excludePopupPaths.includes(location.pathname) && role !== "admin";
 
-  document.addEventListener("contextmenu", (event) => event.preventDefault());
+  // document.addEventListener("contextmenu", (event) => event.preventDefault());
 
-  document.onkeydown = (event) => {
-    if (
-      event.key === "F12" ||
-      (event.ctrlKey &&
-        event.shiftKey &&
-        (event.key === "I" || event.key === "J")) ||
-      (event.ctrlKey && event.key === "U")
-    ) {
-      event.preventDefault();
-    }
-  };
+  // document.onkeydown = (event) => {
+  //   if (
+  //     event.key === "F12" ||
+  //     (event.ctrlKey &&
+  //       event.shiftKey &&
+  //       (event.key === "I" || event.key === "J")) ||
+  //     (event.ctrlKey && event.key === "U")
+  //   ) {
+  //     event.preventDefault();
+  //   }
+  // };
 
-  const detectDevToolsByConsole = () => {
-    const startTime = new Date();
+  // const detectDevToolsByConsole = () => {
+  //   const startTime = new Date();
 
-    debugger;
-    const endTime = new Date();
+  //   debugger;
+  //   const endTime = new Date();
 
-    if (endTime - startTime > 100) {
-      alert("DevTools are open. Please close them to continue.");
-      sessionStorage.clear();
-      window.location.href = "/login";
-    }
-  };
+  //   if (endTime - startTime > 100) {
+  //     alert("DevTools are open. Please close them to continue.");
+  //     sessionStorage.clear();
+  //     window.location.href = "/login";
+  //   }
+  // };
 
-  setInterval(detectDevToolsByConsole, 0);
+  // setInterval(detectDevToolsByConsole, 0);
 
   return (
     <div className="flex flex-col min-h-screen">

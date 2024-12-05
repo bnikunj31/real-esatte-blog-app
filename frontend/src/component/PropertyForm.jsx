@@ -84,7 +84,7 @@ const PropertyForm = () => {
       toast.error("Please upload at least one property map.");
       return false;
     }
-    if (!price || isNaN(price) || price <= 0) {
+    if (!price || price < 0) {
       toast.error("Please enter a valid price.");
       return false;
     }
@@ -382,7 +382,7 @@ const PropertyForm = () => {
               variant="standard"
               fullWidth
               margin="normal"
-              required
+              requiredz
             />
           </Grid>
           <Grid item xs={6}>

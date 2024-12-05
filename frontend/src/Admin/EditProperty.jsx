@@ -102,7 +102,7 @@ const EditProperty = () => {
       toast.error("Please enter a description.");
       return false;
     }
-    if (!price || isNaN(price) || price <= 0) {
+    if (!price || price < 0) {
       toast.error("Please enter a valid price.");
       return false;
     }

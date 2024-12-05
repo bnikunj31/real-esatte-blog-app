@@ -216,7 +216,7 @@ const PropertyDetail = () => {
                   <th scope="row">Status</th>
                 </tr>
                 <tr>
-                  <td>₹{price.toLocaleString()}</td>
+                  <td>{price > 0 ? `₹${price}` : "Enquiry For Price"}</td>
                   <td>{area} sqrt</td>
                   <td>{type}</td>
                   <td>{status}</td>
