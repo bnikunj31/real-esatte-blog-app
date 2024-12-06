@@ -1,10 +1,12 @@
 import React, { useState, useEffect, useRef } from "react";
+import Select from 'react-select';
+
 import {
   Box,
   TextField,
   Button,
   MenuItem,
-  Select,
+
   InputLabel,
   FormControl,
   Grid,
@@ -18,6 +20,7 @@ import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { Add, Remove } from "@mui/icons-material";
+import "./style/propertyform.css"
 
 const PropertyForm = () => {
   const VisuallyHiddenInput = styled("input")({
@@ -47,7 +50,7 @@ const PropertyForm = () => {
   const [status, setStatus] = useState("available");
   const [propertyTypes, setPropertyTypes] = useState([]);
   const [fields, setFields] = useState([{ key: "", value: "" }]);
-  console.log(fields);
+
 
   useEffect(() => {
     const fetchPropertyTypes = async () => {
@@ -103,6 +106,7 @@ const PropertyForm = () => {
     return true;
   };
 
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -129,16 +133,16 @@ const PropertyForm = () => {
         propertyLocationMap.forEach((file) => {
           formData.append("property_location_map", file);
         });
+              // Log all FormData key-value pairs
+      for (let [key, value] of formData.entries()) {
+        console.log(`${key}:`, value);
       }
 
-      for (let pair of formData.entries()) {
-        console.log(`${pair[0]}:`, pair[1]);
       }
+
       try {
-        console.log("Form data", formData);
         const response = await axios.post(
-          `${import.meta.env.VITE_API_ROUTE}/api/property/propertyAdd`,
-          formData,
+          `${import.meta.env.VITE_API_ROUTE}/api/property/propertyAdd`, formData,
           {
             headers: {
               "Content-Type": "multipart/form-data",
@@ -178,6 +182,7 @@ const PropertyForm = () => {
       [{ color: [] }, { background: [] }],
       ["blockquote", "code-block"],
       ["clean"],
+      [{ 'size': ['10px', '20px', '80px'] }],
     ],
   };
 
@@ -201,6 +206,9 @@ const PropertyForm = () => {
     const updatedFields = fields.filter((_, i) => i !== index);
     setFields(updatedFields);
   };
+
+  const capitalizeFirstLetter = (string) =>
+    string ? string.charAt(0).toUpperCase() + string.slice(1) : "";
 
   return (
     <div className="flex items-center justify-center w-full min-h-screen px-2 sm:px-5">
@@ -411,7 +419,7 @@ const PropertyForm = () => {
             />
           </Grid>
 
-          <Grid item xs={6}>
+          {/* <Grid item xs={6}>
             <FormControl variant="standard" fullWidth required>
               <InputLabel id="type-label">Property Type</InputLabel>
               <Select
@@ -429,9 +437,45 @@ const PropertyForm = () => {
                 ))}
               </Select>
             </FormControl>
+          </Grid> */}
+          <Grid item xs={6}>
+            <FormControl fullWidth required>
+              <InputLabel shrink htmlFor="type-label">Property Type</InputLabel>
+              <Select
+                id="type-label"
+                isMulti
+                options={propertyTypes.map((propertyType) => ({
+                  value: propertyType._id,
+                  label: propertyType.type_name,
+                }))}
+                value={
+                  Array.isArray(type)
+                    ? type.map((id) => {
+                      const property = propertyTypes.find((pt) => pt._id === id);
+                      return { value: id, label: property?.type_name || id };
+                    })
+                    : []
+                }
+                onChange={(selectedOptions) =>
+                  setType(selectedOptions.map((option) => option.value))
+                }
+                placeholder="Select property type"
+                styles={{
+                  control: (provided) => ({
+                    ...provided,
+                    minHeight: '56px',
+                    border: '1px solid rgba(0, 0, 0, 0.23)',
+                    boxShadow: 'none',
+                    '&:hover': { borderColor: 'rgba(0, 0, 0, 0.87)' },
+                  }),
+                }}
+              />
+            </FormControl>
           </Grid>
 
-          <Grid item xs={6}>
+
+          {/* <Grid item xs={6}>
+
             <FormControl variant="standard" fullWidth required>
               <InputLabel id="status-label">Status</InputLabel>
               <Select
@@ -444,7 +488,37 @@ const PropertyForm = () => {
                 <MenuItem value="not available">Not Available</MenuItem>
               </Select>
             </FormControl>
+          </Grid> */}
+
+
+
+
+          <Grid item xs={6}>
+            <FormControl fullWidth required>
+              <InputLabel shrink htmlFor="status-select">Status</InputLabel>
+              <Select
+                id="status-select"
+                options={[
+                  { value: "available", label: "Available" },
+                  { value: "sold", label: "Sold" },
+                  { value: "not available", label: "Not Available" },
+                ]}
+                value={{ value: status, label: status ? capitalizeFirstLetter(status) : "" }}
+                onChange={(selectedOption) => setStatus(selectedOption.value)}
+                placeholder="Select status"
+                styles={{
+                  control: (provided) => ({
+                    ...provided,
+                    minHeight: "56px",
+                    border: "1px solid rgba(0, 0, 0, 0.23)",
+                    boxShadow: "none",
+                    "&:hover": { borderColor: "rgba(0, 0, 0, 0.87)" },
+                  }),
+                }}
+              />
+            </FormControl>
           </Grid>
+
 
           <Grid item xs={12}>
             <Button

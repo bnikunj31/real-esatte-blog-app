@@ -51,7 +51,7 @@ exports.addProperty = async (req, res) => {
       status,
     } = req.body;
     const parsedRatings = JSON.parse(req.body.ratings || "[]");
-    console.log(req.body);
+    console.log("data", req.body);
 
     if (
       !name ||
