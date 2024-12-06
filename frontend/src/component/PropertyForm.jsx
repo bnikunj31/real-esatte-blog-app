@@ -501,7 +501,6 @@ const PropertyForm = () => {
                 options={[
                   { value: "available", label: "Available" },
                   { value: "sold", label: "Sold" },
-                  { value: "not available", label: "Not Available" },
                 ]}
                 value={{ value: status, label: status ? capitalizeFirstLetter(status) : "" }}
                 onChange={(selectedOption) => setStatus(selectedOption.value)}

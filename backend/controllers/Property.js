@@ -52,6 +52,9 @@ exports.addProperty = async (req, res) => {
     } = req.body;
     const parsedRatings = JSON.parse(req.body.ratings || "[]");
     console.log("data", req.body);
+    const typeArray = type
+      .split(",")
+      .map((id) => new mongoose.Types.ObjectId(id.trim()));
 
     if (
       !name ||
@@ -108,7 +111,7 @@ exports.addProperty = async (req, res) => {
       price,
       area,
       location,
-      type,
+      type: typeArray,
       status,
     });
 
@@ -216,12 +219,17 @@ exports.getPropertyType = async (req, res) => {
 exports.getProperties = async (req, res) => {
   try {
     const properties = await Property.find().lean();
+
     if (properties.length === 0) {
       return res.status(404).json({ msg: "No Properties Found." });
     }
 
+    const typeIds = properties.flatMap((p) =>
+      Array.isArray(p.type) ? p.type : [p.type]
+    );
+
     const propertyTypes = await PropertyType.find({
-      _id: { $in: properties.map((p) => p.type) },
+      _id: { $in: typeIds },
     });
 
     const typeMapping = propertyTypes.reduce((acc, propertyType) => {
@@ -230,8 +238,12 @@ exports.getProperties = async (req, res) => {
     }, {});
 
     properties.forEach((property) => {
-      if (typeMapping[property.type]) {
-        property.type = typeMapping[property.type];
+      if (Array.isArray(property.type)) {
+        property.type = property.type.map(
+          (typeId) => typeMapping[typeId] || null
+        );
+      } else {
+        property.type = typeMapping[property.type] || null;
       }
     });
 

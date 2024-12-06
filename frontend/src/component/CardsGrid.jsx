@@ -67,7 +67,12 @@ const Cards = ({ card }) => {
             }}
           ></p>
           <p className="card-text">
-            <strong>Type:</strong> {card.type}
+            <strong>Type:</strong>{" "}
+            {Array.isArray(card.type)
+              ? card.type.length > 0
+                ? card.type.join(", ")
+                : "No Type"
+              : card.type || "No Type"}{" "}
           </p>
           <div className="d-flex justify-content-between">
             <p className="card-text">

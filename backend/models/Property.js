@@ -54,11 +54,13 @@ const propertySchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    type: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "PropertyType",
-      required: true,
-    },
+    type: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "PropertyType",
+        required: true,
+      },
+    ],
     status: {
       type: String,
       default: "available",
