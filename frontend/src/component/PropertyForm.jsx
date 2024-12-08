@@ -48,6 +48,7 @@ const PropertyForm = () => {
   const [status, setStatus] = useState("available");
   const [propertyTypes, setPropertyTypes] = useState([]);
   const [fields, setFields] = useState([{ key: "", value: "" }]);
+  const [priceAndArea, setPriceAndArea] = useState([{ key: "", value: "" }]);
 
   useEffect(() => {
     const fetchPropertyTypes = async () => {
@@ -117,6 +118,8 @@ const PropertyForm = () => {
       formData.append("type", type);
       formData.append("status", status);
       formData.append("ratings", JSON.stringify(fields));
+      formData.append("PriceAndArea", JSON.stringify(priceAndArea));
+      // formData.append("PriceAndArea", JSON.stringify(priceAndAreaData));
 
       propertyImages.forEach((file) => {
         formData.append("property_images", file);
@@ -160,6 +163,7 @@ const PropertyForm = () => {
           setType("");
           setStatus("available");
           setFields([{ key: "", value: "" }]);
+          setPriceAndArea([{ area: "", price: "" }]);
         }
       } catch (error) {
         toast.error(error.response?.data?.msg || "Failed to add property.");
@@ -193,6 +197,25 @@ const PropertyForm = () => {
     updatedFields[index][name] = value;
     setFields(updatedFields);
   };
+
+  const handlePriceAndAreaChange = (index, event) => {
+    const { name, value } = event.target;
+    const updatedFields = [...priceAndArea];
+    updatedFields[index][name] = value;
+    setPriceAndArea(updatedFields);
+  };
+
+  const handleAddPriceAndAreaField = () => {
+    setPriceAndArea([...priceAndArea, { area: "", price: "" }]);
+  };
+
+  const handleRemovePriceAndAreaField = (index) => {
+    const updatedFields = priceAndArea.filter((_, i) => i !== index);
+    setPriceAndArea(updatedFields);
+  };
+
+
+
 
   const handleAddField = () => {
     setFields([...fields, { key: "", value: "" }]);
@@ -283,6 +306,7 @@ const PropertyForm = () => {
                     }}
                   />
                 </Grid>
+
                 <Grid item xs={2}>
                   <IconButton
                     aria-label="remove"
@@ -304,6 +328,56 @@ const PropertyForm = () => {
               Add
             </Button>
           </Grid>
+
+
+          <Grid item xs={12} className="mb-3">
+            <p className="font-semibold text-md">Area & Price:</p>
+            {priceAndArea.map((field, index) => (
+              <Grid container key={index} spacing={2} sx={{ mt: 1 }}>
+                <Grid item xs={5}>
+                  <TextField
+                    name="area"
+                    label="Area"
+                    value={field.area}
+                    onChange={(e) => handlePriceAndAreaChange(index, e)}
+                    variant="standard"
+                    fullWidth
+                  />
+                </Grid>
+                <Grid item xs={4}>
+                  <TextField
+                    name="price"
+                    label="Price"
+                    type="number"
+                    value={field.price}
+                    onChange={(e) => handlePriceAndAreaChange(index, e)}
+                    variant="outlined"
+                    size="small"
+                    sx={{ flex: 1, width: "100%" }}
+                  />
+                </Grid>
+                <Grid item xs={2}>
+                  <IconButton
+                    aria-label="remove"
+                    color="error"
+                    onClick={() => handleRemovePriceAndAreaField(index)}
+                  >
+                    <Remove />
+                  </IconButton>
+                </Grid>
+              </Grid>
+            ))}
+            <Button
+              className="mt-3"
+              startIcon={<Add />}
+              size="small"
+              variant="outlined"
+              onClick={handleAddPriceAndAreaField}
+            >
+              Add
+            </Button>
+          </Grid>
+
 
           <Grid item xs={12}>
             <Grid container spacing={2}>
@@ -433,11 +507,11 @@ const PropertyForm = () => {
                 value={
                   Array.isArray(type)
                     ? type.map((id) => {
-                        const property = propertyTypes.find(
-                          (pt) => pt._id === id
-                        );
-                        return { value: id, label: property?.type_name || id };
-                      })
+                      const property = propertyTypes.find(
+                        (pt) => pt._id === id
+                      );
+                      return { value: id, label: property?.type_name || id };
+                    })
                     : []
                 }
                 onChange={(selectedOptions) =>
