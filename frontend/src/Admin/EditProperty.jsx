@@ -9,8 +9,11 @@ import {
   Select,
   InputLabel,
   FormControl,
+
   Grid,
 } from "@mui/material";
+import Typography from '@mui/material/Typography';
+
 import { styled } from "@mui/system";
 import { toast, ToastContainer } from "react-toastify";
 import axios from "axios";
@@ -23,7 +26,6 @@ const EditProperty = () => {
   const navigate = useNavigate();
 
   const propertyData = location.state?.property || {};
-  console.log(propertyData.data);
 
   const [name, setName] = useState(propertyData.name || "");
   const [description, setDescription] = useState(
@@ -35,7 +37,7 @@ const EditProperty = () => {
   const [propertyVideo, setPropertyVideo] = useState(
     propertyData.property_video || ""
   );
-  console.log(propertyVideo);
+
 
   const [price, setPrice] = useState(propertyData.price || "");
   const [area, setArea] = useState(propertyData.area || "");
@@ -52,6 +54,27 @@ const EditProperty = () => {
   );
   const [ratingName, setRatingName] = useState();
   const [ratingValue, setRatingValue] = useState();
+
+  const [priceAndArea, setPriceAndArea] = useState([{ area: "", price: "" }]);
+
+  const handlePriceAndAreaChange = (index, field, value) => {
+    const updated = [...priceAndArea];
+    updated[index][field] = value;
+    setPriceAndArea(updated);
+  };
+
+  const addPriceAndAreaRow = () => {
+    setPriceAndArea([...priceAndArea, { key: "", value: "" }]);
+  };
+
+  const removePriceAndAreaRow = (index) => {
+    const updated = priceAndArea.filter((_, i) => i !== index);
+    setPriceAndArea(updated);
+  };
+
+
+
+
 
   const VisuallyHiddenInput = styled("input")({
     clip: "rect(0 0 0 0)",
@@ -169,8 +192,7 @@ const EditProperty = () => {
 
       try {
         const response = await axios.patch(
-          `${import.meta.env.VITE_API_ROUTE}/api/property/propertyUpdate/${
-            propertyData._id
+          `${import.meta.env.VITE_API_ROUTE}/api/property/propertyUpdate/${propertyData._id
           }`,
           formData,
           {
@@ -235,7 +257,6 @@ const EditProperty = () => {
                   onChange={(e) =>
                     handleRatingChange(index, "key", e.target.value)
                   }
-                  // onChange={(e) => setRatingName(e.target.value)}
                   label="Rating Name"
                   fullWidth
                   required
@@ -247,7 +268,7 @@ const EditProperty = () => {
                   onChange={(e) =>
                     handleRatingChange(index, "value", e.target.value)
                   }
-                  // onChange={(e) => setRatingValue(e.target.value)}
+
                   label="Rating Value"
                   inputProps={{
                     step: 0.5,
@@ -277,6 +298,55 @@ const EditProperty = () => {
             </Button>
           </Grid>
 
+
+
+
+          {/* PriceAndArea Section */}
+          <Grid item xs={12}>
+            <Typography variant="h6">Price and Area</Typography>
+          </Grid>
+          {priceAndArea.map((item, index) => (
+            <Grid container item spacing={2} key={index}>
+              <Grid item xs={5}>
+                <TextField
+                  value={item.key}
+                  onChange={(e) =>
+                    handlePriceAndAreaChange(index, "key", e.target.value)
+                  }
+                  label="Name"
+                  fullWidth
+                  required
+                />
+              </Grid>
+              <Grid item xs={5}>
+                <TextField
+                  value={item.value}
+                  onChange={(e) =>
+                    handlePriceAndAreaChange(index, "value", e.target.value)
+                  }
+                  label="Value"
+                  type="number"
+                  fullWidth
+                  required
+                />
+              </Grid>
+              <Grid item xs={2}>
+                <Button
+                  onClick={() => removePriceAndAreaRow(index)}
+                  color="secondary"
+                  fullWidth
+                  disabled={priceAndArea.length === 1}
+                >
+                  Remove
+                </Button>
+              </Grid>
+            </Grid>
+          ))}
+          <Grid item xs={12}>
+            <Button onClick={addPriceAndAreaRow} fullWidth>
+              Add Price and Area
+            </Button>
+          </Grid>
           {/* File Uploads */}
           <Grid item xs={12}>
             <Grid container spacing={2}>
@@ -310,6 +380,7 @@ const EditProperty = () => {
                   />
                 </Button>
               </Grid>
+
               <Grid item xs={12} sm={4}>
                 <Button
                   component="label"
@@ -421,7 +492,9 @@ const EditProperty = () => {
             </Button>
           </Grid>
         </Grid>
+
       </Box>
+
     </div>
   );
 };
