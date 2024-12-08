@@ -41,14 +41,12 @@ const PropertyForm = () => {
   const [propertyMap, setPropertyMap] = useState([]);
   const [propertyLocationMap, setPropertyLocationMap] = useState([]);
   const [propertyVideo, setPropertyVideo] = useState("");
-  const [price, setPrice] = useState("");
-  const [area, setArea] = useState("");
   const [location, setLocation] = useState("");
   const [type, setType] = useState("");
   const [status, setStatus] = useState("available");
   const [propertyTypes, setPropertyTypes] = useState([]);
   const [fields, setFields] = useState([{ key: "", value: "" }]);
-  const [priceAndArea, setPriceAndArea] = useState([{ key: "", value: "" }]);
+  const [priceAndArea, setPriceAndArea] = useState([{ area: "", price: "" }]);
 
   useEffect(() => {
     const fetchPropertyTypes = async () => {
@@ -85,14 +83,6 @@ const PropertyForm = () => {
       toast.error("Please upload at least one property map.");
       return false;
     }
-    if (!price || price < 0) {
-      toast.error("Please enter a valid price.");
-      return false;
-    }
-    if (!area) {
-      toast.error("Please enter the area.");
-      return false;
-    }
     if (!location) {
       toast.error("Please enter the location.");
       return false;
@@ -112,14 +102,11 @@ const PropertyForm = () => {
       formData.append("name", name);
       formData.append("description", description);
       formData.append("property_video", propertyVideo || "");
-      formData.append("price", price);
-      formData.append("area", area);
       formData.append("location", location);
       formData.append("type", type);
       formData.append("status", status);
       formData.append("ratings", JSON.stringify(fields));
       formData.append("PriceAndArea", JSON.stringify(priceAndArea));
-      // formData.append("PriceAndArea", JSON.stringify(priceAndAreaData));
 
       propertyImages.forEach((file) => {
         formData.append("property_images", file);
@@ -132,7 +119,6 @@ const PropertyForm = () => {
         propertyLocationMap.forEach((file) => {
           formData.append("property_location_map", file);
         });
-        // Log all FormData key-value pairs
         for (let [key, value] of formData.entries()) {
           console.log(`${key}:`, value);
         }
@@ -157,8 +143,6 @@ const PropertyForm = () => {
           setPropertyMap([]);
           setPropertyLocationMap([]);
           setPropertyVideo("");
-          setPrice("");
-          setArea("");
           setLocation("");
           setType("");
           setStatus("available");
@@ -213,9 +197,6 @@ const PropertyForm = () => {
     const updatedFields = priceAndArea.filter((_, i) => i !== index);
     setPriceAndArea(updatedFields);
   };
-
-
-
 
   const handleAddField = () => {
     setFields([...fields, { key: "", value: "" }]);
@@ -329,7 +310,6 @@ const PropertyForm = () => {
             </Button>
           </Grid>
 
-
           <Grid item xs={12} className="mb-3">
             <p className="font-semibold text-md">Area & Price:</p>
             {priceAndArea.map((field, index) => (
@@ -338,6 +318,7 @@ const PropertyForm = () => {
                   <TextField
                     name="area"
                     label="Area"
+                    type="number"
                     value={field.area}
                     onChange={(e) => handlePriceAndAreaChange(index, e)}
                     variant="standard"
@@ -349,9 +330,9 @@ const PropertyForm = () => {
                     name="price"
                     label="Price"
                     type="number"
-                    value={field.price}
+                    value={field.price || 0}
                     onChange={(e) => handlePriceAndAreaChange(index, e)}
-                    variant="outlined"
+                    variant="standard"
                     size="small"
                     sx={{ flex: 1, width: "100%" }}
                   />
@@ -377,7 +358,6 @@ const PropertyForm = () => {
               Add
             </Button>
           </Grid>
-
 
           <Grid item xs={12}>
             <Grid container spacing={2}>
@@ -454,32 +434,6 @@ const PropertyForm = () => {
               margin="normal"
             />
           </Grid>
-          <Grid item xs={6}>
-            <TextField
-              id="price"
-              value={price}
-              onChange={(e) => setPrice(e.target.value)}
-              label="Price"
-              type="number"
-              variant="standard"
-              fullWidth
-              margin="normal"
-              requiredz
-            />
-          </Grid>
-          <Grid item xs={6}>
-            <TextField
-              id="area"
-              value={area}
-              onChange={(e) => setArea(e.target.value)}
-              label="Area (sq. ft.)"
-              type="number"
-              variant="standard"
-              fullWidth
-              margin="normal"
-              required
-            />
-          </Grid>
           <Grid item xs={12}>
             <TextField
               id="location"
@@ -507,11 +461,11 @@ const PropertyForm = () => {
                 value={
                   Array.isArray(type)
                     ? type.map((id) => {
-                      const property = propertyTypes.find(
-                        (pt) => pt._id === id
-                      );
-                      return { value: id, label: property?.type_name || id };
-                    })
+                        const property = propertyTypes.find(
+                          (pt) => pt._id === id
+                        );
+                        return { value: id, label: property?.type_name || id };
+                      })
                     : []
                 }
                 onChange={(selectedOptions) =>
