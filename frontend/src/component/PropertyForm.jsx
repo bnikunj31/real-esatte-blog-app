@@ -48,7 +48,7 @@ const PropertyForm = () => {
   const [status, setStatus] = useState("available");
   const [propertyTypes, setPropertyTypes] = useState([]);
   const [fields, setFields] = useState([{ key: "", value: "" }]);
-  const [priceAndArea, setPriceAndArea] = useState([{ key: "", value: "" }]);
+  const [priceAndArea, setPriceAndArea] = useState([{ area: "", price: "" }]);
 
   useEffect(() => {
     const fetchPropertyTypes = async () => {
