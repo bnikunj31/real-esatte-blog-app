@@ -1,12 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
-import Select from 'react-select';
-
+import Select from "react-select";
 import {
   Box,
   TextField,
   Button,
   MenuItem,
-
   InputLabel,
   FormControl,
   Grid,
@@ -20,7 +18,7 @@ import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { Add, Remove } from "@mui/icons-material";
-import "./style/propertyform.css"
+import "./style/propertyform.css";
 
 const PropertyForm = () => {
   const VisuallyHiddenInput = styled("input")({
@@ -50,7 +48,6 @@ const PropertyForm = () => {
   const [status, setStatus] = useState("available");
   const [propertyTypes, setPropertyTypes] = useState([]);
   const [fields, setFields] = useState([{ key: "", value: "" }]);
-
 
   useEffect(() => {
     const fetchPropertyTypes = async () => {
@@ -106,7 +103,6 @@ const PropertyForm = () => {
     return true;
   };
 
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -133,16 +129,16 @@ const PropertyForm = () => {
         propertyLocationMap.forEach((file) => {
           formData.append("property_location_map", file);
         });
-              // Log all FormData key-value pairs
-      for (let [key, value] of formData.entries()) {
-        console.log(`${key}:`, value);
-      }
-
+        // Log all FormData key-value pairs
+        for (let [key, value] of formData.entries()) {
+          console.log(`${key}:`, value);
+        }
       }
 
       try {
         const response = await axios.post(
-          `${import.meta.env.VITE_API_ROUTE}/api/property/propertyAdd`, formData,
+          `${import.meta.env.VITE_API_ROUTE}/api/property/propertyAdd`,
+          formData,
           {
             headers: {
               "Content-Type": "multipart/form-data",
@@ -182,7 +178,7 @@ const PropertyForm = () => {
       [{ color: [] }, { background: [] }],
       ["blockquote", "code-block"],
       ["clean"],
-      [{ 'size': ['10px', '20px', '80px'] }],
+      [{ size: ["10px", "20px", "80px"] }],
     ],
   };
 
@@ -251,12 +247,12 @@ const PropertyForm = () => {
             className="
           mb-3"
           >
-            <div className="flex items-center justify-between">
-              {/* <p className="font-semibold text-md">Property Attributes</p> */}
-            </div>
+            <div className="flex items-center justify-between"></div>
+            <p className="font-semibold text-md">Ratings:</p>
             {fields.map((field, index) => (
               <Grid container key={index} spacing={2} sx={{ mt: 1 }}>
                 <Grid item xs={5}>
+                  {" "}
                   <TextField
                     name="key"
                     label="Key"
@@ -266,7 +262,8 @@ const PropertyForm = () => {
                     fullWidth
                   />
                 </Grid>
-                <Grid item xs={5}>
+                <Grid item xs={4}>
+                  {" "}
                   <TextField
                     name="value"
                     label="Value"
@@ -280,7 +277,10 @@ const PropertyForm = () => {
                     onChange={(e) => handleInputChange(index, e)}
                     variant="outlined"
                     size="small"
-                    sx={{ flex: 1 }}
+                    sx={{
+                      flex: 1,
+                      width: "100%",
+                    }}
                   />
                 </Grid>
                 <Grid item xs={2}>
@@ -418,29 +418,11 @@ const PropertyForm = () => {
               required
             />
           </Grid>
-
-          {/* <Grid item xs={6}>
-            <FormControl variant="standard" fullWidth required>
-              <InputLabel id="type-label">Property Type</InputLabel>
-              <Select
-                labelId="type-label"
-                value={type}
-                onChange={(e) => setType(e.target.value)}
-              >
-                <MenuItem value="">
-                  <em>Select property type</em>
-                </MenuItem>
-                {propertyTypes.map((propertyType) => (
-                  <MenuItem key={propertyType._id} value={propertyType._id}>
-                    {propertyType.type_name}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </Grid> */}
           <Grid item xs={6}>
             <FormControl fullWidth required>
-              <InputLabel shrink htmlFor="type-label">Property Type</InputLabel>
+              <InputLabel shrink htmlFor="type-label">
+                Property Type
+              </InputLabel>
               <Select
                 id="type-label"
                 isMulti
@@ -451,9 +433,11 @@ const PropertyForm = () => {
                 value={
                   Array.isArray(type)
                     ? type.map((id) => {
-                      const property = propertyTypes.find((pt) => pt._id === id);
-                      return { value: id, label: property?.type_name || id };
-                    })
+                        const property = propertyTypes.find(
+                          (pt) => pt._id === id
+                        );
+                        return { value: id, label: property?.type_name || id };
+                      })
                     : []
                 }
                 onChange={(selectedOptions) =>
@@ -463,46 +447,31 @@ const PropertyForm = () => {
                 styles={{
                   control: (provided) => ({
                     ...provided,
-                    minHeight: '56px',
-                    border: '1px solid rgba(0, 0, 0, 0.23)',
-                    boxShadow: 'none',
-                    '&:hover': { borderColor: 'rgba(0, 0, 0, 0.87)' },
+                    minHeight: "56px",
+                    border: "1px solid rgba(0, 0, 0, 0.23)",
+                    boxShadow: "none",
+                    "&:hover": { borderColor: "rgba(0, 0, 0, 0.87)" },
                   }),
                 }}
               />
             </FormControl>
           </Grid>
 
-
-          {/* <Grid item xs={6}>
-
-            <FormControl variant="standard" fullWidth required>
-              <InputLabel id="status-label">Status</InputLabel>
-              <Select
-                labelId="status-label"
-                value={status}
-                onChange={(e) => setStatus(e.target.value)}
-              >
-                <MenuItem value="available">Available</MenuItem>
-                <MenuItem value="sold">Sold</MenuItem>
-                <MenuItem value="not available">Not Available</MenuItem>
-              </Select>
-            </FormControl>
-          </Grid> */}
-
-
-
-
           <Grid item xs={6}>
             <FormControl fullWidth required>
-              <InputLabel shrink htmlFor="status-select">Status</InputLabel>
+              <InputLabel shrink htmlFor="status-select">
+                Status
+              </InputLabel>
               <Select
                 id="status-select"
                 options={[
                   { value: "available", label: "Available" },
                   { value: "sold", label: "Sold" },
                 ]}
-                value={{ value: status, label: status ? capitalizeFirstLetter(status) : "" }}
+                value={{
+                  value: status,
+                  label: status ? capitalizeFirstLetter(status) : "",
+                }}
                 onChange={(selectedOption) => setStatus(selectedOption.value)}
                 placeholder="Select status"
                 styles={{
@@ -517,7 +486,6 @@ const PropertyForm = () => {
               />
             </FormControl>
           </Grid>
-
 
           <Grid item xs={12}>
             <Button
