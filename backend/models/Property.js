@@ -42,14 +42,12 @@ const propertySchema = new mongoose.Schema(
     property_video: {
       type: String,
     },
-    price: {
-      type: Number,
-      required: true,
-    },
-    area: {
-      type: String,
-      required: true,
-    },
+    priceAndArea: [
+      {
+        area: { type: String },
+        price: { type: String, default: 0 },
+      },
+    ],
     location: {
       type: String,
       required: true,

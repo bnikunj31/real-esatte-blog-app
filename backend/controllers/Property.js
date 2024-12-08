@@ -40,31 +40,16 @@ const saveAndUploadFile = async (file) => {
 
 exports.addProperty = async (req, res) => {
   try {
-    const {
-      name,
-      description,
-      property_video,
-      price,
-      area,
-      location,
-      type,
-      status,
-    } = req.body;
+    const { name, description, property_video, location, type, status } =
+      req.body;
     const parsedRatings = JSON.parse(req.body.ratings || "[]");
+    const parsedPriceAndArea = JSON.parse(req.body.PriceAndArea || "[]");
     console.log("data", req.body);
     const typeArray = type
       .split(",")
       .map((id) => new mongoose.Types.ObjectId(id.trim()));
 
-    if (
-      !name ||
-      !description ||
-      !price ||
-      !area ||
-      !location ||
-      !type ||
-      !status
-    ) {
+    if (!name || !description || !location || !type || !status) {
       return res.status(400).json({ message: "All fields are required" });
     }
 
@@ -72,7 +57,6 @@ exports.addProperty = async (req, res) => {
       return res.status(400).json({ message: "No files uploaded" });
     }
 
-    // Ensure property_map, property_location_map are always arrays
     const propertyImagesUrls = await Promise.all(
       (req.files.property_images
         ? Array.isArray(req.files.property_images)
@@ -108,8 +92,7 @@ exports.addProperty = async (req, res) => {
       property_map: propertyMapUrls,
       property_location_map: propertyLocationMapUrls,
       property_video,
-      price,
-      area,
+      priceAndArea: parsedPriceAndArea,
       location,
       type: typeArray,
       status,
