@@ -9,10 +9,9 @@ import {
   Select,
   InputLabel,
   FormControl,
-
   Grid,
 } from "@mui/material";
-import Typography from '@mui/material/Typography';
+import Typography from "@mui/material/Typography";
 
 import { styled } from "@mui/system";
 import { toast, ToastContainer } from "react-toastify";
@@ -39,9 +38,6 @@ const EditProperty = () => {
     propertyData.property_video || ""
   );
 
-
-  const [price, setPrice] = useState(propertyData.price || "");
-  const [area, setArea] = useState(propertyData.area || "");
   const [propertyLocation, setPropertyLocation] = useState(
     propertyData.location || ""
   );
@@ -56,28 +52,26 @@ const EditProperty = () => {
   );
   const [ratingName, setRatingName] = useState();
   const [ratingValue, setRatingValue] = useState();
-  const [priceAndArea, setPriceAndArea] = useState(propertyData.priceAndArea?.length > 0 ? propertyData.priceAndArea : [{ area: "", price: "" }]);
-  // console.log(priceAndArea)
+  const [priceAndArea, setPriceAndArea] = useState(
+    propertyData.priceAndArea?.length > 0
+      ? propertyData.priceAndArea
+      : [{ area: "", price: "" }]
+  );
 
   const handlePriceAndAreaChange = (index, field, value) => {
     const updated = [...priceAndArea];
-    updated[index][field] = value;  // Correct field names ('area' or 'price')
+    updated[index][field] = value;
     setPriceAndArea(updated);
   };
 
-
   const addPriceAndAreaRow = () => {
-    setPriceAndArea([...priceAndArea, { area: "", price: "" }]);  // Add a new row with empty values
+    setPriceAndArea([...priceAndArea, { area: "", price: "" }]);
   };
 
   const removePriceAndAreaRow = (index) => {
-    const updated = priceAndArea.filter((_, i) => i !== index);  // Remove the row at the specified index
+    const updated = priceAndArea.filter((_, i) => i !== index);
     setPriceAndArea(updated);
   };
-
-
-
-
 
   const VisuallyHiddenInput = styled("input")({
     clip: "rect(0 0 0 0)",
@@ -129,7 +123,7 @@ const EditProperty = () => {
       toast.error("Please enter a description.");
       return false;
     }
-    
+
     if (!propertyLocation) {
       toast.error("Please enter the location.");
       return false;
@@ -149,7 +143,6 @@ const EditProperty = () => {
     );
   };
 
-
   const addRatingRow = () => {
     setRatings((prevRatings) => [...prevRatings, { key: "", value: "" }]);
   };
@@ -161,20 +154,16 @@ const EditProperty = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-
-
     if (validateForm()) {
       const formData = new FormData();
       formData.append("name", name);
       formData.append("description", description);
       formData.append("property_video", propertyVideo || "");
-      formData.append("price", price);
-      formData.append("area", area);
       formData.append("location", propertyLocation);
       formData.append("type", type);
       formData.append("status", status);
       formData.append("rating", JSON.stringify(rating));
-      formData.append("PriceAndArea", JSON.stringify(setPriceAndArea));
+      formData.append("PriceAndArea", JSON.stringify(priceAndArea));
 
       propertyImages.forEach((file) => {
         formData.append("property_images", file);
@@ -188,7 +177,8 @@ const EditProperty = () => {
 
       try {
         const response = await axios.patch(
-          `${import.meta.env.VITE_API_ROUTE}/api/property/propertyUpdate/${propertyData._id
+          `${import.meta.env.VITE_API_ROUTE}/api/property/propertyUpdate/${
+            propertyData._id
           }`,
           formData,
           {
@@ -268,7 +258,6 @@ const EditProperty = () => {
                   onChange={(e) =>
                     handleRatingChange(index, "value", e.target.value)
                   }
-
                   label="Rating Value"
                   inputProps={{
                     step: 0.5,
@@ -297,9 +286,6 @@ const EditProperty = () => {
               Add Rating
             </Button>
           </Grid>
-
-
-
 
           {/* PriceAndArea Section */}
           <Grid item xs={12}>
@@ -348,18 +334,18 @@ const EditProperty = () => {
           ))} */}
           {priceAndArea.map((item, index) => (
             <Grid container item spacing={2} key={index}>
-              {console.log(item)} 
+              {console.log(item)}
               <Grid item xs={5}>
                 <TextField
-                  value={item.area}  
+                  value={item.area}
                   onChange={(e) =>
-                    handlePriceAndAreaChange(index, "area", e.target.value) 
-        }
-                label="Area"
-                type="number"
-                fullWidth
-                required
-      />
+                    handlePriceAndAreaChange(index, "area", e.target.value)
+                  }
+                  label="Area"
+                  type="number"
+                  fullWidth
+                  required
+                />
               </Grid>
 
               <Grid item xs={5}>
@@ -461,34 +447,6 @@ const EditProperty = () => {
 
           <Grid item xs={12}>
             <TextField
-              id="price"
-              value={price}
-              onChange={(e) => setPrice(e.target.value)}
-              label="Price"
-              type="number"
-              variant="standard"
-              fullWidth
-              required
-              margin="normal"
-            />
-          </Grid>
-
-          <Grid item xs={12}>
-            <TextField
-              id="area"
-              value={area}
-              onChange={(e) => setArea(e.target.value)}
-              label="Area"
-              type="text"
-              variant="standard"
-              fullWidth
-              required
-              margin="normal"
-            />
-          </Grid>
-
-          <Grid item xs={12}>
-            <TextField
               id="location"
               value={propertyLocation}
               onChange={(e) => setPropertyLocation(e.target.value)}
@@ -538,9 +496,7 @@ const EditProperty = () => {
             </Button>
           </Grid>
         </Grid>
-
       </Box>
-
     </div>
   );
 };

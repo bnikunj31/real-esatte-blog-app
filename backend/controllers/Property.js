@@ -269,28 +269,29 @@ exports.updateProperty = async (req, res) => {
       name,
       description,
       property_video,
-      price,
-      area,
+      PriceAndArea,
       location,
       type,
       status,
       rating,
     } = req.body;
     const updatedRating = JSON.parse(rating);
+    const parsedPriceAndArea = JSON.parse(PriceAndArea);
+    console.log(req.body);
     console.log(updatedRating, typeof updatedRating);
+    console.log(parsedPriceAndArea, typeof parsedPriceAndArea);
 
     const propertyType = await PropertyType.find({ type_name: type }).lean();
 
     property.name = name || property.name;
     property.description = description || property.description;
     property.property_video = property_video || property.property_video;
-    property.price = price || property.price;
-    property.area = area || property.area;
     property.location = location || property.location;
     property.type =
       propertyType.length > 0 ? propertyType[0]._id : property.type;
     property.status = status || property.status;
     property.rating = updatedRating || property.rating;
+    property.priceAndArea = parsedPriceAndArea || property.priceAndArea;
 
     // Handle file uploads to S3
     if (req.files) {
