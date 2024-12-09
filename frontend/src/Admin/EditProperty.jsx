@@ -6,7 +6,6 @@ import {
   TextField,
   Button,
   MenuItem,
-  Select,
   InputLabel,
   FormControl,
   Grid,
@@ -19,6 +18,7 @@ import axios from "axios";
 import "react-toastify/dist/ReactToastify.css";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { useLocation, useNavigate } from "react-router-dom";
+import Select from "react-select";
 
 const EditProperty = () => {
   const location = useLocation();
@@ -151,6 +151,11 @@ const EditProperty = () => {
     setRatings((prevRatings) => prevRatings.filter((_, i) => i !== index));
   };
 
+  const options = [
+    { value: "available", label: "Available" },
+    { value: "sold", label: "Sold" },
+  ];
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -225,7 +230,6 @@ const EditProperty = () => {
               margin="normal"
             />
           </Grid>
-
           <Grid item xs={12}>
             <label htmlFor="description">Description</label>
             <ReactQuill
@@ -235,7 +239,6 @@ const EditProperty = () => {
               placeholder="Edit your Property"
             />
           </Grid>
-
           <Grid item xs={12}>
             <Typography variant="h6">Rating</Typography>
           </Grid>
@@ -286,52 +289,10 @@ const EditProperty = () => {
               Add Rating
             </Button>
           </Grid>
-
           {/* PriceAndArea Section */}
           <Grid item xs={12}>
             <Typography variant="h6">Price and Area</Typography>
           </Grid>
-          {/* {priceAndArea.map((item, index) => (
-
-            <Grid container item spacing={2} key={index}>
-
-              {console.log([item])}
-              <Grid item xs={5}>
-                <TextField
-                  value={item.area}
-                  onChange={(e) =>
-                    handlePriceAndAreaChange(index, "price", e.target.value)
-                  }
-                  label="Name"
-                  type="number"
-                  fullWidth
-                  required
-                />
-              </Grid>
-              <Grid item xs={5}>
-                <TextField
-                  value={item.price}
-                  onChange={(e) =>
-                    handlePriceAndAreaChange(index, "area", e.target.value)
-                  }
-                  label="Value"
-                  type="number"
-                  fullWidth
-                  required
-                />
-              </Grid>
-              <Grid item xs={2}>
-                <Button
-                  onClick={() => removePriceAndAreaRow(index)}
-                  color="secondary"
-                  fullWidth
-                  disabled={priceAndArea.length === 1}
-                >
-                  Remove
-                </Button>
-              </Grid>
-            </Grid>
-          ))} */}
           {priceAndArea.map((item, index) => (
             <Grid container item spacing={2} key={index}>
               {console.log(item)}
@@ -373,7 +334,6 @@ const EditProperty = () => {
               </Grid>
             </Grid>
           ))}
-
           <Grid item xs={12}>
             <Button onClick={addPriceAndAreaRow} fullWidth>
               Add Price and Area
@@ -430,7 +390,6 @@ const EditProperty = () => {
               </Grid>
             </Grid>
           </Grid>
-
           <Grid item xs={12}>
             <TextField
               id="propertyVideo"
@@ -444,7 +403,6 @@ const EditProperty = () => {
               margin="normal"
             />
           </Grid>
-
           <Grid item xs={12}>
             <TextField
               id="location"
@@ -458,33 +416,37 @@ const EditProperty = () => {
               margin="normal"
             />
           </Grid>
-
           <Grid item xs={12}>
-            <FormControl variant="standard" fullWidth margin="normal">
-              <InputLabel>Type</InputLabel>
-              <Select value={type} onChange={(e) => setType(e.target.value)}>
-                {propertyTypes.map((pt) => (
-                  <MenuItem key={pt._id} value={pt.type_name}>
-                    {pt.type_name}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
+            <Typography variant="subtitle1">Type</Typography>
+            <Select
+              options={propertyTypes.map((pt) => ({
+                label: pt.type_name,
+                value: pt.type_name,
+              }))}
+              value={type}
+              onChange={(selectedOptions) => setType(selectedOptions)}
+              placeholder="Select Type"
+              isMulti
+            />
           </Grid>
-
           <Grid item xs={12}>
-            <FormControl variant="standard" fullWidth margin="normal">
-              <InputLabel>Status</InputLabel>
-              <Select
-                value={status}
-                onChange={(e) => setStatus(e.target.value)}
+            <div style={{ margin: "16px 0" }}>
+              <label
+                htmlFor="status-select"
+                style={{ marginBottom: "8px", display: "block" }}
               >
-                <MenuItem value="available">Available</MenuItem>
-                <MenuItem value="sold">Sold</MenuItem>
-              </Select>
-            </FormControl>
+                Status
+              </label>
+              <Select
+                id="status-select"
+                options={options}
+                value={options.find((option) => option.value === status)}
+                onChange={(selectedOption) => setStatus(selectedOption?.value)}
+                isClearable
+              />
+            </div>
           </Grid>
-
+          ;
           <Grid item xs={12} className="text-right">
             <Button
               type="submit"
