@@ -6,7 +6,7 @@ import {
   TextField,
   Button,
   MenuItem,
-  Select,
+  
   InputLabel,
   FormControl,
 
@@ -20,6 +20,7 @@ import axios from "axios";
 import "react-toastify/dist/ReactToastify.css";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { useLocation, useNavigate } from "react-router-dom";
+import Select from "react-select";
 
 const EditProperty = () => {
   const location = useLocation();
@@ -40,8 +41,8 @@ const EditProperty = () => {
   );
 
 
-  const [price, setPrice] = useState(propertyData.price || "");
-  const [area, setArea] = useState(propertyData.area || "");
+  // const [price, setPrice] = useState(propertyData.price || "");
+  // const [area, setArea] = useState(propertyData.area || "");
   const [propertyLocation, setPropertyLocation] = useState(
     propertyData.location || ""
   );
@@ -158,6 +159,11 @@ const EditProperty = () => {
     setRatings((prevRatings) => prevRatings.filter((_, i) => i !== index));
   };
 
+  const options = [
+    { value: "available", label: "Available" },
+    { value: "sold", label: "Sold" },
+  ];
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -168,8 +174,8 @@ const EditProperty = () => {
       formData.append("name", name);
       formData.append("description", description);
       formData.append("property_video", propertyVideo || "");
-      formData.append("price", price);
-      formData.append("area", area);
+      // formData.append("price", price);
+      // formData.append("area", area);
       formData.append("location", propertyLocation);
       formData.append("type", type);
       formData.append("status", status);
@@ -459,7 +465,7 @@ const EditProperty = () => {
             />
           </Grid>
 
-          <Grid item xs={12}>
+          {/* <Grid item xs={12}>
             <TextField
               id="price"
               value={price}
@@ -471,9 +477,9 @@ const EditProperty = () => {
               required
               margin="normal"
             />
-          </Grid>
+          </Grid> */}
 
-          <Grid item xs={12}>
+          {/* <Grid item xs={12}>
             <TextField
               id="area"
               value={area}
@@ -485,9 +491,9 @@ const EditProperty = () => {
               required
               margin="normal"
             />
-          </Grid>
+          </Grid> */}
 
-          <Grid item xs={12}>
+          {/* <Grid item xs={12}>
             <TextField
               id="location"
               value={propertyLocation}
@@ -499,21 +505,26 @@ const EditProperty = () => {
               required
               margin="normal"
             />
-          </Grid>
+          </Grid> */}
 
-          <Grid item xs={12}>
-            <FormControl variant="standard" fullWidth margin="normal">
-              <InputLabel>Type</InputLabel>
-              <Select value={type} onChange={(e) => setType(e.target.value)}>
-                {propertyTypes.map((pt) => (
-                  <MenuItem key={pt._id} value={pt.type_name}>
-                    {pt.type_name}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </Grid>
+          
 
+          
+<Grid item xs={12}>
+  <Typography variant="subtitle1">Type</Typography>
+  <Select
+    options={propertyTypes.map((pt) => ({
+      label: pt.type_name,
+      value: pt.type_name,
+    }))}
+    value={type}
+    onChange={(selectedOptions) => setType(selectedOptions)}
+    placeholder="Select Type"
+    isMulti
+  />
+</Grid>
+
+{/* 
           <Grid item xs={12}>
             <FormControl variant="standard" fullWidth margin="normal">
               <InputLabel>Status</InputLabel>
@@ -525,7 +536,22 @@ const EditProperty = () => {
                 <MenuItem value="sold">Sold</MenuItem>
               </Select>
             </FormControl>
-          </Grid>
+          </Grid> */}
+
+<Grid item xs={12}>
+  <div style={{ margin: "16px 0" }}>
+    <label htmlFor="status-select" style={{ marginBottom: "8px", display: "block" }}>
+      Status
+    </label>
+    <Select
+      id="status-select"
+      options={options}
+      value={options.find((option) => option.value === status)}
+      onChange={(selectedOption) => setStatus(selectedOption?.value)}
+      isClearable
+    />
+  </div>
+</Grid>;
 
           <Grid item xs={12} className="text-right">
             <Button
