@@ -26,6 +26,7 @@ const EditProperty = () => {
   const navigate = useNavigate();
 
   const propertyData = location.state?.property || {};
+  console.log("data", propertyData);
 
   const [name, setName] = useState(propertyData.name || "");
   const [description, setDescription] = useState(
@@ -44,6 +45,7 @@ const EditProperty = () => {
   const [propertyLocation, setPropertyLocation] = useState(
     propertyData.location || ""
   );
+
   const [type, setType] = useState(propertyData.type || "");
   const [status, setStatus] = useState(propertyData.status || "available");
   const [propertyTypes, setPropertyTypes] = useState([]);
@@ -54,21 +56,22 @@ const EditProperty = () => {
   );
   const [ratingName, setRatingName] = useState();
   const [ratingValue, setRatingValue] = useState();
-
-  const [priceAndArea, setPriceAndArea] = useState([{ area: "", price: "" }]);
+  const [priceAndArea, setPriceAndArea] = useState(propertyData.priceAndArea?.length > 0 ? propertyData.priceAndArea : [{ area: "", price: "" }]);
+  // console.log(priceAndArea)
 
   const handlePriceAndAreaChange = (index, field, value) => {
     const updated = [...priceAndArea];
-    updated[index][field] = value;
+    updated[index][field] = value;  // Correct field names ('area' or 'price')
     setPriceAndArea(updated);
   };
 
+
   const addPriceAndAreaRow = () => {
-    setPriceAndArea([...priceAndArea, { key: "", value: "" }]);
+    setPriceAndArea([...priceAndArea, { area: "", price: "" }]);  // Add a new row with empty values
   };
 
   const removePriceAndAreaRow = (index) => {
-    const updated = priceAndArea.filter((_, i) => i !== index);
+    const updated = priceAndArea.filter((_, i) => i !== index);  // Remove the row at the specified index
     setPriceAndArea(updated);
   };
 
@@ -108,6 +111,7 @@ const EditProperty = () => {
         const response = await axios.get(
           `${import.meta.env.VITE_API_ROUTE}/api/property/propertyTypeAdd`
         );
+
         setPropertyTypes(response.data.propertyTypes || []);
       } catch (error) {
         toast.error("Failed to fetch property types.");
@@ -125,14 +129,7 @@ const EditProperty = () => {
       toast.error("Please enter a description.");
       return false;
     }
-    if (!price || price < 0) {
-      toast.error("Please enter a valid price.");
-      return false;
-    }
-    if (!area) {
-      toast.error("Please enter the area.");
-      return false;
-    }
+    
     if (!propertyLocation) {
       toast.error("Please enter the location.");
       return false;
@@ -151,12 +148,7 @@ const EditProperty = () => {
       )
     );
   };
-  // const addRatingRow = () => {
-  //   setRatings((prevRatings) => [
-  //     ...prevRatings,
-  //     { key: ratingName, value: ratingValue },
-  //   ]);
-  // };
+
 
   const addRatingRow = () => {
     setRatings((prevRatings) => [...prevRatings, { key: "", value: "" }]);
@@ -168,6 +160,9 @@ const EditProperty = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+
+
     if (validateForm()) {
       const formData = new FormData();
       formData.append("name", name);
@@ -179,6 +174,7 @@ const EditProperty = () => {
       formData.append("type", type);
       formData.append("status", status);
       formData.append("rating", JSON.stringify(rating));
+      formData.append("PriceAndArea", JSON.stringify(setPriceAndArea));
 
       propertyImages.forEach((file) => {
         formData.append("property_images", file);
@@ -199,6 +195,7 @@ const EditProperty = () => {
             headers: { "Content-Type": "multipart/form-data" },
           }
         );
+
         if (response.status === 200) {
           toast.success("Property updated successfully!");
           navigate("/properties");
@@ -249,6 +246,9 @@ const EditProperty = () => {
             />
           </Grid>
 
+          <Grid item xs={12}>
+            <Typography variant="h6">Rating</Typography>
+          </Grid>
           {rating.map((rating, index) => (
             <Grid container item spacing={2} key={index}>
               <Grid item xs={5}>
@@ -305,24 +305,28 @@ const EditProperty = () => {
           <Grid item xs={12}>
             <Typography variant="h6">Price and Area</Typography>
           </Grid>
-          {priceAndArea.map((item, index) => (
+          {/* {priceAndArea.map((item, index) => (
+
             <Grid container item spacing={2} key={index}>
+
+              {console.log([item])}
               <Grid item xs={5}>
                 <TextField
-                  value={item.key}
+                  value={item.area}
                   onChange={(e) =>
-                    handlePriceAndAreaChange(index, "key", e.target.value)
+                    handlePriceAndAreaChange(index, "price", e.target.value)
                   }
                   label="Name"
+                  type="number"
                   fullWidth
                   required
                 />
               </Grid>
               <Grid item xs={5}>
                 <TextField
-                  value={item.value}
+                  value={item.price}
                   onChange={(e) =>
-                    handlePriceAndAreaChange(index, "value", e.target.value)
+                    handlePriceAndAreaChange(index, "area", e.target.value)
                   }
                   label="Value"
                   type="number"
@@ -341,7 +345,49 @@ const EditProperty = () => {
                 </Button>
               </Grid>
             </Grid>
+          ))} */}
+          {priceAndArea.map((item, index) => (
+            <Grid container item spacing={2} key={index}>
+              {console.log(item)} 
+              <Grid item xs={5}>
+                <TextField
+                  value={item.area}  
+                  onChange={(e) =>
+                    handlePriceAndAreaChange(index, "area", e.target.value) 
+        }
+                label="Area"
+                type="number"
+                fullWidth
+                required
+      />
+              </Grid>
+
+              <Grid item xs={5}>
+                <TextField
+                  value={item.price}
+                  onChange={(e) =>
+                    handlePriceAndAreaChange(index, "price", e.target.value)
+                  }
+                  label="Price"
+                  type="number"
+                  fullWidth
+                  required
+                />
+              </Grid>
+
+              <Grid item xs={2}>
+                <Button
+                  onClick={() => removePriceAndAreaRow(index)}
+                  color="secondary"
+                  fullWidth
+                  disabled={priceAndArea.length === 1}
+                >
+                  Remove
+                </Button>
+              </Grid>
+            </Grid>
           ))}
+
           <Grid item xs={12}>
             <Button onClick={addPriceAndAreaRow} fullWidth>
               Add Price and Area

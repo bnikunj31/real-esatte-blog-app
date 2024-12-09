@@ -99,7 +99,7 @@ const CardsGrid = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const cardsPerPage = 20;
-
+  
   useEffect(() => {
     const fetchProperties = async () => {
       try {

@@ -49,8 +49,7 @@ const PropertiesData = () => {
     "Property Map",
     "Property Location Map",
     "Property Video",
-    "Price",
-    "Area",
+
     "Location",
     "Type",
     "Status",
@@ -161,9 +160,7 @@ const PropertiesData = () => {
       filtered = filtered.filter((row) => row.status === filters.status);
     }
 
-    filtered = filtered.filter(
-      (row) => row.price >= filters.price[0] && row.price <= filters.price[1]
-    );
+
 
     setFilteredRows(filtered);
     setPage(1);
@@ -202,22 +199,7 @@ const PropertiesData = () => {
         />
 
         {/* Price Filter */}
-        <Box sx={{ width: "300px" }}>
-          {" "}
-          {/* Adjust width here */}
-          <Slider
-            value={filters.price}
-            onChange={(e, value) => handleFilterChange("price", value)}
-            valueLabelDisplay="auto"
-            min={0}
-            max={1000000}
-            step={5000}
-          />
-          <Box display="flex" justifyContent="space-between">
-            <span>&#8377;{filters.price[0]}</span>
-            <span>&#8377;{filters.price[1]}</span>
-          </Box>
-        </Box>
+
 
         {/* Type Filter */}
         <Select
@@ -254,7 +236,7 @@ const PropertiesData = () => {
           </RadioGroup>
         </Box>
       </Box>
-      <span className="fs-3 mb-2">Total Users: {filteredRows.length}</span>
+      <span className="fs-3 mb-2">Total Properties : {filteredRows.length}</span>
 
       {/* Table */}
       <TableContainer
@@ -301,7 +283,7 @@ const PropertiesData = () => {
                   </TableCell>
                   <TableCell>
                     {row.property_location_map &&
-                    row.property_location_map.length > 0 ? (
+                      row.property_location_map.length > 0 ? (
                       <ImageCarousel images={row.property_location_map} />
                     ) : (
                       "N/A"
@@ -322,10 +304,13 @@ const PropertiesData = () => {
                       "N/A"
                     )}
                   </TableCell>
-                  <TableCell>{row.price}</TableCell>
-                  <TableCell>{row.area}</TableCell>
+
                   <TableCell>{row.location}</TableCell>
-                  <TableCell>{row.type}</TableCell>
+                  <TableCell>
+                    {Array.isArray(row.type)
+                      ? row.type.join(', ')
+                      : row.type}
+                  </TableCell>
                   <TableCell>{row.status}</TableCell>
                   <TableCell>
                     <div className="flex">

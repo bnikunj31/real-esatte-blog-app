@@ -218,7 +218,10 @@ const PropertyDetail = () => {
                 <tr>
                   <td>{price > 0 ? `₹${price}` : "Enquiry For Price"}</td>
                   <td>{area} sqrt</td>
-                  <td>{type}</td>
+                  <td>
+                    {Array.isArray(type) ? type.join(', ') : type}
+                  </td>
+
                   <td>{status}</td>
                 </tr>
               </tbody>
