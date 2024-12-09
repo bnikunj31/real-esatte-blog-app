@@ -25,7 +25,6 @@ const EditProperty = () => {
   const navigate = useNavigate();
 
   const propertyData = location.state?.property || {};
-  console.log("data", propertyData);
 
   const [name, setName] = useState(propertyData.name || "");
   const [description, setDescription] = useState(
@@ -42,7 +41,9 @@ const EditProperty = () => {
     propertyData.location || ""
   );
 
-  const [type, setType] = useState(propertyData.type || "");
+  const [type, setType] = useState(
+    propertyData.type?.length > 0 ? propertyData.type : []
+  );
   const [status, setStatus] = useState(propertyData.status || "available");
   const [propertyTypes, setPropertyTypes] = useState([]);
   const [rating, setRatings] = useState(
@@ -165,7 +166,7 @@ const EditProperty = () => {
       formData.append("description", description);
       formData.append("property_video", propertyVideo || "");
       formData.append("location", propertyLocation);
-      formData.append("type", type);
+      formData.append("type", JSON.stringify(type.map((t) => t.id)));
       formData.append("status", status);
       formData.append("rating", JSON.stringify(rating));
       formData.append("PriceAndArea", JSON.stringify(priceAndArea));
@@ -191,7 +192,7 @@ const EditProperty = () => {
           }
         );
 
-        if (response.status === 200) {
+        if (response.status === 201) {
           toast.success("Property updated successfully!");
           navigate("/properties");
         }
@@ -295,7 +296,6 @@ const EditProperty = () => {
           </Grid>
           {priceAndArea.map((item, index) => (
             <Grid container item spacing={2} key={index}>
-              {console.log(item)}
               <Grid item xs={5}>
                 <TextField
                   value={item.area}
@@ -423,8 +423,22 @@ const EditProperty = () => {
                 label: pt.type_name,
                 value: pt.type_name,
               }))}
-              value={type}
-              onChange={(selectedOptions) => setType(selectedOptions)}
+              value={type.map((t) => ({
+                label: t.name,
+                value: t.name,
+              }))}
+              onChange={(selectedOptions) =>
+                setType(
+                  selectedOptions
+                    .map((option) => {
+                      const propertyType = propertyTypes.find(
+                        (pt) => pt.type_name === option.value
+                      );
+                      return propertyType ? propertyType._id : null;
+                    })
+                    .filter((id) => id !== null)
+                )
+              }
               placeholder="Select Type"
               isMulti
             />

@@ -160,8 +160,6 @@ const PropertiesData = () => {
       filtered = filtered.filter((row) => row.status === filters.status);
     }
 
-
-
     setFilteredRows(filtered);
     setPage(1);
   };
@@ -200,7 +198,6 @@ const PropertiesData = () => {
 
         {/* Price Filter */}
 
-
         {/* Type Filter */}
         <Select
           options={[...new Set(rows.map((row) => row.type))].map((type) => ({
@@ -236,7 +233,9 @@ const PropertiesData = () => {
           </RadioGroup>
         </Box>
       </Box>
-      <span className="fs-3 mb-2">Total Properties : {filteredRows.length}</span>
+      <span className="fs-3 mb-2">
+        Total Properties : {filteredRows.length}
+      </span>
 
       {/* Table */}
       <TableContainer
@@ -283,7 +282,7 @@ const PropertiesData = () => {
                   </TableCell>
                   <TableCell>
                     {row.property_location_map &&
-                      row.property_location_map.length > 0 ? (
+                    row.property_location_map.length > 0 ? (
                       <ImageCarousel images={row.property_location_map} />
                     ) : (
                       "N/A"
@@ -308,8 +307,8 @@ const PropertiesData = () => {
                   <TableCell>{row.location}</TableCell>
                   <TableCell>
                     {Array.isArray(row.type)
-                      ? row.type.join(', ')
-                      : row.type}
+                      ? row.type.map((t) => t.name).join(", ")
+                      : row.type?.name || ""}
                   </TableCell>
                   <TableCell>{row.status}</TableCell>
                   <TableCell>

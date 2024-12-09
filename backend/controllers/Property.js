@@ -44,7 +44,6 @@ exports.addProperty = async (req, res) => {
       req.body;
     const parsedRatings = JSON.parse(req.body.ratings || "[]");
     const parsedPriceAndArea = JSON.parse(req.body.PriceAndArea || "[]");
-    console.log("data", req.body);
     const typeArray = type
       .split(",")
       .map((id) => new mongoose.Types.ObjectId(id.trim()));
@@ -133,7 +132,7 @@ exports.addCategory = async (req, res) => {
       // Duplicate key error
       return res.status(400).json({ message: "Category already exists." });
     }
-    console.log(err);
+    console.error(err);
     res.status(500).json({ msg: "Internal Server Error." });
   }
 };
@@ -222,11 +221,15 @@ exports.getProperties = async (req, res) => {
 
     properties.forEach((property) => {
       if (Array.isArray(property.type)) {
-        property.type = property.type.map(
-          (typeId) => typeMapping[typeId] || null
-        );
+        property.type = property.type.map((typeId) => {
+          return typeMapping[typeId]
+            ? { id: typeId, name: typeMapping[typeId] }
+            : null;
+        });
       } else {
-        property.type = typeMapping[property.type] || null;
+        property.type = typeMapping[property.type]
+          ? { id: property.type, name: typeMapping[property.type] }
+          : null;
       }
     });
 
@@ -251,7 +254,7 @@ exports.getCategorizeProperties = async (req, res) => {
     }
     return res.status(200).json(properties);
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return res.status(500).json({ message: "Internal server error " });
   }
 };
@@ -277,9 +280,7 @@ exports.updateProperty = async (req, res) => {
     } = req.body;
     const updatedRating = JSON.parse(rating);
     const parsedPriceAndArea = JSON.parse(PriceAndArea);
-    console.log(req.body);
-    console.log(updatedRating, typeof updatedRating);
-    console.log(parsedPriceAndArea, typeof parsedPriceAndArea);
+    console.log(type, typeof type);
 
     const propertyType = await PropertyType.find({ type_name: type }).lean();
 
