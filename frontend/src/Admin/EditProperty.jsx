@@ -183,8 +183,7 @@ const EditProperty = () => {
 
       try {
         const response = await axios.patch(
-          `${import.meta.env.VITE_API_ROUTE}/api/property/propertyUpdate/${
-            propertyData._id
+          `${import.meta.env.VITE_API_ROUTE}/api/property/propertyUpdate/${propertyData._id
           }`,
           formData,
           {
@@ -421,28 +420,24 @@ const EditProperty = () => {
             <Select
               options={propertyTypes.map((pt) => ({
                 label: pt.type_name,
-                value: pt.type_name,
+                value: pt._id, // Use `_id` for the value to map back to your data source
               }))}
-              value={type.map((t) => ({
-                label: t.name,
-                value: t.name,
-              }))}
+              value={type.map((id) => {
+                const propertyType = propertyTypes.find((pt) => pt._id === id);
+                return propertyType ? { label: propertyType.type_name, value: propertyType._id } : null;
+              }).filter((option) => option !== null)} // Filter out null values
               onChange={(selectedOptions) =>
-                setType(
-                  selectedOptions
-                    .map((option) => {
-                      const propertyType = propertyTypes.find(
-                        (pt) => pt.type_name === option.value
-                      );
-                      return propertyType ? propertyType._id : null;
-                    })
-                    .filter((id) => id !== null)
-                )
+                setType(selectedOptions.map((option) => option.value)) // Store only the selected `_id`s
               }
               placeholder="Select Type"
               isMulti
+              styles={{
+                menu: (provided) => ({ ...provided, zIndex: 9999 }), // Fix dropdown z-index
+              }}
             />
           </Grid>
+
+
           <Grid item xs={12}>
             <div style={{ margin: "16px 0" }}>
               <label

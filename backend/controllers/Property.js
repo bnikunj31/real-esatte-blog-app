@@ -280,7 +280,9 @@ exports.updateProperty = async (req, res) => {
     } = req.body;
     const updatedRating = JSON.parse(rating);
     const parsedPriceAndArea = JSON.parse(PriceAndArea);
-    console.log(type, typeof type);
+    const typeparse = JSON.parse(type);
+
+    console.log("type", typeparse, typeof typeparse);
 
     const propertyType = await PropertyType.find({ type_name: type }).lean();
 
