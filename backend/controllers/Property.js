@@ -282,16 +282,15 @@ exports.updateProperty = async (req, res) => {
     const parsedPriceAndArea = JSON.parse(PriceAndArea);
     const typeparse = JSON.parse(type);
 
-    console.log("type", typeparse, typeof typeparse);
-
-    const propertyType = await PropertyType.find({ type_name: type }).lean();
+    const propertyType = await PropertyType.find({
+      _id: { $in: typeparse },
+    }).lean();
 
     property.name = name || property.name;
     property.description = description || property.description;
     property.property_video = property_video || property.property_video;
     property.location = location || property.location;
-    property.type =
-      propertyType.length > 0 ? propertyType[0]._id : property.type;
+    property.type = typeparse;
     property.status = status || property.status;
     property.rating = updatedRating || property.rating;
     property.priceAndArea = parsedPriceAndArea || property.priceAndArea;

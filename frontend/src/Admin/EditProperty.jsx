@@ -183,7 +183,8 @@ const EditProperty = () => {
 
       try {
         const response = await axios.patch(
-          `${import.meta.env.VITE_API_ROUTE}/api/property/propertyUpdate/${propertyData._id
+          `${import.meta.env.VITE_API_ROUTE}/api/property/propertyUpdate/${
+            propertyData._id
           }`,
           formData,
           {
@@ -191,7 +192,7 @@ const EditProperty = () => {
           }
         );
 
-        if (response.status === 201) {
+        if (response.status === 200) {
           toast.success("Property updated successfully!");
           navigate("/properties");
         }
@@ -420,24 +421,33 @@ const EditProperty = () => {
             <Select
               options={propertyTypes.map((pt) => ({
                 label: pt.type_name,
-                value: pt._id, // Use `_id` for the value to map back to your data source
+                value: pt._id,
               }))}
-              value={type.map((id) => {
-                const propertyType = propertyTypes.find((pt) => pt._id === id);
-                return propertyType ? { label: propertyType.type_name, value: propertyType._id } : null;
-              }).filter((option) => option !== null)} // Filter out null values
+              value={type
+                .map((item) => {
+                  const propertyType = propertyTypes.find(
+                    (pt) => pt._id === item.id
+                  );
+                  return propertyType
+                    ? { label: propertyType.type_name, value: propertyType._id }
+                    : null;
+                })
+                .filter((option) => option !== null)}
               onChange={(selectedOptions) =>
-                setType(selectedOptions.map((option) => option.value)) // Store only the selected `_id`s
+                setType(
+                  selectedOptions.map((option) => ({
+                    id: option.value,
+                    name: option.label,
+                  }))
+                )
               }
               placeholder="Select Type"
               isMulti
               styles={{
-                menu: (provided) => ({ ...provided, zIndex: 9999 }), // Fix dropdown z-index
+                menu: (provided) => ({ ...provided, zIndex: 9999 }),
               }}
             />
           </Grid>
-
-
           <Grid item xs={12}>
             <div style={{ margin: "16px 0" }}>
               <label
