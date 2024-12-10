@@ -31,6 +31,7 @@ const PropertyDetail = () => {
           );
           if (!response.ok) throw new Error("Failed to fetch property details");
           const data = await response.json();
+          console.log("response", data);
           setProperty(data);
         } catch (error) {
           setError(error.message);
@@ -44,6 +45,7 @@ const PropertyDetail = () => {
 
   useEffect(() => {
     if (state?.card) {
+      console.log(state.card);
       setProperty(state.card);
     }
   }, [state]);
@@ -96,8 +98,7 @@ const PropertyDetail = () => {
     location: propertyLocation,
     description,
     property_images,
-    price,
-    area,
+    priceAndArea,
     type,
     status,
     property_map,
@@ -210,19 +211,50 @@ const PropertyDetail = () => {
             <table className="table table-bordered w-100">
               <tbody>
                 <tr>
-                  <th scope="row">Price</th>
-                  <th scope="row">Area</th>
                   <th scope="row">Type</th>
-                  <th scope="row">Status</th>
+                  <td>
+                    {Array.isArray(type)
+                      ? type.length > 0
+                        ? type.map((t) => t.name).join(", ")
+                        : "No Type"
+                      : type.name || "No Type"}
+                  </td>
                 </tr>
                 <tr>
-                  <td>{price > 0 ? `₹${price}` : "Enquiry For Price"}</td>
-                  <td>{area} sqrt</td>
-                  <td>
-                    {Array.isArray(type) ? type.join(', ') : type}
-                  </td>
-
+                  <th scope="row">Status</th>
                   <td>{status}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div className="col-12">
+          <div className="table-responsive">
+            <table className="table table-bordered w-100">
+              <tbody>
+                <tr>
+                  <th scope="row">Area</th>
+                  {priceAndArea && priceAndArea.length > 0 ? (
+                    priceAndArea.map((item) => (
+                      <td key={`area-${item._id}`}>{`${item.area} sq ft.`}</td>
+                    ))
+                  ) : (
+                    <td colSpan="2">No data available</td>
+                  )}
+                </tr>
+                <tr>
+                  <th scope="row">Price</th>
+                  {priceAndArea && priceAndArea.length > 0 ? (
+                    priceAndArea.map((item) => (
+                      <td key={`price-${item._id}`}>
+                        {item.price > 0
+                          ? `₹${item.price}`
+                          : "Enquiry For Price"}
+                      </td>
+                    ))
+                  ) : (
+                    <td colSpan="2">No data available</td>
+                  )}
                 </tr>
               </tbody>
             </table>

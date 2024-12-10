@@ -70,13 +70,20 @@ const Cards = ({ card }) => {
             <strong>Type:</strong>{" "}
             {Array.isArray(card.type)
               ? card.type.length > 0
-                ? card.type.join(", ")
+                ? card.type.map((t) => t.name).join(", ")
                 : "No Type"
-              : card.type || "No Type"}{" "}
+              : card.type.name || "No Type"}
           </p>
           <div className="d-flex justify-content-between">
             <p className="card-text">
-              <strong>Area:</strong> {card.area}
+              <strong>Area:</strong>{" "}
+              {Array.isArray(card.priceAndArea)
+                ? card.priceAndArea.length > 0
+                  ? card.priceAndArea
+                      .map((item) => `${item.area} sq ft.`)
+                      .join(", ")
+                  : "No Area"
+                : "No Area"}
             </p>
           </div>
           <button
@@ -99,7 +106,7 @@ const CardsGrid = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const cardsPerPage = 20;
-  
+
   useEffect(() => {
     const fetchProperties = async () => {
       try {
@@ -107,6 +114,7 @@ const CardsGrid = () => {
         const response = await axios.get(
           `${import.meta.env.VITE_API_ROUTE}/api/property/fetch`
         );
+        console.log(response);
         if (response.status === 200) {
           const data = await response.data;
           setCards(data);
