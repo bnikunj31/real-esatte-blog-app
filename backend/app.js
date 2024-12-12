@@ -36,6 +36,10 @@ app.use(
 app.use("/api/users", users);
 app.use("/api/enquiry", enquiries);
 app.use("/api/property", property);
+app.use("/api/test", (req, res) => {
+  console.log("API TEST MESSAGE!!!");
+  return res.status(200).send("API TEST MESSAGE!!!!");
+});
 
 if (process.env.NODE_ENV === "production") {
   const buildPath = path.join(__dirname, "../frontend/dist");
