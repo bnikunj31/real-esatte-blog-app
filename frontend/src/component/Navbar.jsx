@@ -119,17 +119,19 @@ const Navbar = () => {
                 All Categories
               </span>
               <ul className="absolute z-10 hidden w-48 p-1 mt-1 bg-gray-700 text-white rounded-lg shadow-lg group-hover:block">
-                {categories.map((category) => (
-                  <li key={category._id}>
-                    <Link
-                      to={`/category/${category._id}`}
-                      className="block px-4 py-2 text-white hover:bg-gray-500 dark:hover:bg-gray-600 dark:text-white"
-                      onClick={closeMenu}
-                    >
-                      {category.type_name}
-                    </Link>
-                  </li>
-                ))}
+                {categories &&
+                  categories.length > 0 &&
+                  categories.map((category) => (
+                    <li key={category._id}>
+                      <Link
+                        to={`/category/${category._id}`}
+                        className="block px-4 py-2 text-white hover:bg-gray-500 dark:hover:bg-gray-600 dark:text-white"
+                        onClick={closeMenu}
+                      >
+                        {category.type_name}
+                      </Link>
+                    </li>
+                  ))}
               </ul>
             </li>
             <li>
