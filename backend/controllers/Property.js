@@ -1,9 +1,10 @@
 const mongoose = require("mongoose");
 const path = require("path");
 const fs = require("fs");
-const { S3Client, PutObjectCommand } = require("@aws-sdk/client-s3");
 const Property = require("../models/Property");
 const PropertyType = require("../models/PropertyTypes");
+const mime = require("mime-types");
+const { S3Client, PutObjectCommand } = require("@aws-sdk/client-s3");
 
 const s3 = new S3Client({
   region: process.env.AWS_REGION,
@@ -14,16 +15,21 @@ const s3 = new S3Client({
 });
 
 const uploadFileToS3 = async (fileBuffer, fileName) => {
+  const fileExtension = fileName.split(".").pop();
+  const mimeType = mime.lookup(fileExtension);
+  if (!mimeType) {
+    throw new Error("Unable to determine MIME type");
+  }
   const params = {
     Bucket: process.env.AWS_BUCKET_NAME,
     Key: `uploads/${fileName}`,
     Body: fileBuffer,
-    ContentType: fileName.split(".").pop(), // Dynamically set content type based on file extension
-    ACL: "public-read", // Make the file publicly accessible
+    ContentType: mimeType,
+    ACL: "public-read",
   };
 
   const command = new PutObjectCommand(params);
-  await s3.send(command);
+  const data = await s3.send(command);
   return `https://${process.env.AWS_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/uploads/${fileName}`;
 };
 
@@ -302,7 +308,7 @@ exports.updateProperty = async (req, res) => {
 
       const handleFileArray = async (fileArray) => {
         const uploadedFiles = [];
-        if (fileArray.length < 2) {
+        if (fileArray.length) {
           for (let file of fileArray) {
             try {
               const fileUrl = await saveAndUploadFile(file);
