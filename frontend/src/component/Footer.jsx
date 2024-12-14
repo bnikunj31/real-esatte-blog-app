@@ -100,7 +100,7 @@ const Footer = () => {
 
       {/* Copyright Section */}
       <div className="py-4 mt-8 text-center text-white bg-black">
-        <p>Copyright © 2024 Flats in Zirakpur | All Rights Reserved</p>
+        <p>Copyright © 2024 Property Mission | All Rights Reserved</p>
       </div>
     </footer>
   );
